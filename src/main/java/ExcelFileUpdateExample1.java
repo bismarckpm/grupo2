@@ -104,6 +104,55 @@ public class ExcelFileUpdateExample1 {
 	
 		return;
 	}
+
+	static void IngresarRegistro(String nombre, String autor, int precio, String archivo) {
+
+		try {
+			FileInputStream inputStream = new FileInputStream(new File(archivo));
+			Workbook workbook = WorkbookFactory.create(inputStream);
+
+			Sheet sheet = workbook.getSheetAt(0);
+
+			Object[][] bookData = {
+					{nombre,autor,precio},
+			};
+
+			int rowCount = sheet.getLastRowNum();
+
+			for (Object[] aBook : bookData) {
+				Row row = sheet.createRow(++rowCount);
+
+				int columnCount = 0;
+				
+				Cell cell = row.createCell(columnCount);
+				cell.setCellValue(rowCount);
+				
+				for (Object field : aBook) {
+					cell = row.createCell(++columnCount);
+					if (field instanceof String) {
+						cell.setCellValue((String) field);
+					} else if (field instanceof Integer) {
+						cell.setCellValue((Integer) field);
+					}
+				}
+
+			}
+
+			inputStream.close();
+
+			FileOutputStream outputStream = new FileOutputStream(archivo);
+			workbook.write(outputStream);
+			workbook.close();
+			outputStream.close();
+			
+		} catch (IOException | EncryptedDocumentException
+				| InvalidFormatException ex) {
+			ex.printStackTrace();
+		}
+
+
+	}
+
 	
 	public static void main(String[] args) {
 		String excelFilePath = "Inventario.xlsx";
@@ -129,8 +178,24 @@ public class ExcelFileUpdateExample1 {
 	        break;
 
 	    case 2: //Alumno B 
-	        
-	        System.out.println("The Subtraction Leaves The Number: ");
+			String libro="";
+			String autor="";
+			int precio=0;
+			Scanner scan = new Scanner(System.in);
+			
+			System.out.println(" Ingrese nuevo registro : \n");
+
+			System.out.println(" Ingrese nombre del libro : \n");
+			libro=scan.nextLine();
+			System.out.println(" Ingrese autor del libro : \n");
+			autor=scan.nextLine();
+			System.out.println(" Ingrese precio del libro : \n");
+			precio=scan.nextInt();
+
+			IngresarRegistro(libro, autor, precio, excelFilePath);
+
+			System.out.println(" Registro Completado \n");
+		
 	        break;
 
 	    case 3: // Alumno C Jesus Cadiz
