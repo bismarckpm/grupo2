@@ -377,56 +377,7 @@ public class ExcelFileUpdateExample1 {
 
 
 	    }
-		/* 
-		try {
-			FileInputStream inputStream = new FileInputStream(new File(excelFilePath));
-			Workbook workbook = WorkbookFactory.create(inputStream);
-
-			Sheet sheet = workbook.getSheetAt(0);
-
-			Object[][] bookData = {
-					{"El que se duerme pierde", "Tom Peter", 16},
-					{"Sin lugar a duda", "Ana Gutierrez", 26},
-					{"El arte de dormir", "Nico", 32},
-					{"Buscando a Nemo", "Humble Po", 41},
-			};
-
-			int rowCount = sheet.getLastRowNum();
-
-			for (Object[] aBook : bookData) {
-				Row row = sheet.createRow(++rowCount);
-
-				int columnCount = 0;
-				
-				Cell cell = row.createCell(columnCount);
-				cell.setCellValue(rowCount);
-				
-				for (Object field : aBook) {
-					cell = row.createCell(++columnCount);
-					if (field instanceof String) {
-						cell.setCellValue((String) field);
-					} else if (field instanceof Integer) {
-						cell.setCellValue((Integer) field);
-					}
-				}
-
-			}
-
-			inputStream.close();
-
-			FileOutputStream outputStream = new FileOutputStream(excelFilePath);
-			workbook.write(outputStream);
-			workbook.close();
-			outputStream.close();
-			
-		} catch (IOException | EncryptedDocumentException
-				| InvalidFormatException ex) {
-			ex.printStackTrace();
-		}
 		
-	}
-	
-	*/
 	}
 
 }
