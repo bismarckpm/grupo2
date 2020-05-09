@@ -111,39 +111,94 @@ public class ExcelFileUpdateExample1 {
 			FileInputStream inputStream = new FileInputStream(new File(archivo));
 			Workbook workbook = WorkbookFactory.create(inputStream);
 
-			Sheet sheet = workbook.getSheetAt(0);
+			
+			int sheetCount = workbook.getNumberOfSheets();
+			Sheet sheet = workbook.getSheetAt(sheetCount-1);
+			int totalRowCount = sheet.getLastRowNum();
 
-			Object[][] bookData = {
+			if (totalRowCount >=30){
+
+				Sheet newSheet = workbook.createSheet("Java Books "+sheetCount);
+
+				Object[][] bookData = {
 					{nombre,autor,precio},
-			};
+				};
 
-			int rowCount = sheet.getLastRowNum();
+				int rowCount = 0;
 
-			for (Object[] aBook : bookData) {
-				Row row = sheet.createRow(++rowCount);
-
-				int columnCount = 0;
+				  Row initRow = newSheet.createRow(rowCount);
+				  Cell initCell = initRow.createCell(0);
+				  initCell.setCellValue("No");
+				  initCell = initRow.createCell(1);
+				  initCell.setCellValue("Book Title");
+				  initCell = initRow.createCell(2);
+				  initCell.setCellValue("Author");
+				  initCell = initRow.createCell(3);
+				  initCell.setCellValue("Price");
 				
-				Cell cell = row.createCell(columnCount);
-				cell.setCellValue(rowCount);
-				
-				for (Object field : aBook) {
-					cell = row.createCell(++columnCount);
-					if (field instanceof String) {
-						cell.setCellValue((String) field);
-					} else if (field instanceof Integer) {
-						cell.setCellValue((Integer) field);
+
+            	for (Object[] aBook : bookData) {
+					
+                	Row row = newSheet.createRow(++rowCount);
+					
+					int columnCount = 0;
+					
+					Cell newCell = row.createCell(columnCount);
+					newCell.setCellValue(rowCount);
+                  
+               	 for (Object field : aBook) {
+                   	 Cell cell = row.createCell(++columnCount);
+                  	  if (field instanceof String) {
+                  	      cell.setCellValue((String) field);
+                  	  } else if (field instanceof Integer) {
+                   	     cell.setCellValue((Integer) field);
+                   	 }
+                }
+                  
+            }       
+ 
+            FileOutputStream outputStream = new FileOutputStream(archivo);
+            workbook.write(outputStream);
+            workbook.close();
+            outputStream.close();
+
+			}else{
+
+					Object[][] bookData = {
+							{nombre,autor,precio},
+					};
+
+					int rowCount = sheet.getLastRowNum();
+
+
+					for (Object[] aBook : bookData) {
+						Row row = sheet.createRow(++rowCount);
+
+						int columnCount = 0;
+						
+						Cell cell = row.createCell(columnCount);
+						cell.setCellValue(rowCount);
+						
+						for (Object field : aBook) {
+							cell = row.createCell(++columnCount);
+							if (field instanceof String) {
+								cell.setCellValue((String) field);
+							} else if (field instanceof Integer) {
+								cell.setCellValue((Integer) field);
+							}
+						}
+
 					}
+					
+
+					inputStream.close();
+
+					FileOutputStream outputStream = new FileOutputStream(archivo);
+					workbook.write(outputStream);
+					workbook.close();
+					outputStream.close();
+
 				}
-
-			}
-
-			inputStream.close();
-
-			FileOutputStream outputStream = new FileOutputStream(archivo);
-			workbook.write(outputStream);
-			workbook.close();
-			outputStream.close();
 			
 		} catch (IOException | EncryptedDocumentException
 				| InvalidFormatException ex) {
