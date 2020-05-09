@@ -11,19 +11,164 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-/**
- * This program illustrates how to update an existing Microsoft Excel document.
- * Append new rows to an existing sheet.
- * 
- * @author www.codejava.net
- *
- */
+import java.util.Scanner;
+
 public class ExcelFileUpdateExample1 {
 
+	static void ActualizarLibro(int id, String atributo, String archivo) {
+		String nuevoValor="";
+		int precio=0, rowCount=0;
+		boolean ciclo = true;
+		Scanner entrada = new Scanner(System.in);
+		Scanner entrada2 = new Scanner(System.in);
+		
+		try {
+			FileInputStream inputStream = new FileInputStream(new File(archivo));
+			Workbook workbook = WorkbookFactory.create(inputStream);
+			Sheet sheet = workbook.getSheetAt(0);
+			rowCount = sheet.getLastRowNum();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		if (atributo == "Author" && id <= rowCount) {
+			try {
+				FileInputStream inputStream = new FileInputStream(new File(archivo));
+				Workbook workbook = WorkbookFactory.create(inputStream);
+				
+				while(ciclo) {
+					System.out.print("\n Ingrese el nuevo valor para el Autor: ");
 
+			        nuevoValor = entrada.nextLine();
+			        
+			        if (nuevoValor=="") {
+			        	System.out.print("\n Por favor ingrese un valor: ");
+			        }else {
+			        	ciclo = false;
+			        }
+				}
+				
+				Sheet sheet = workbook.getSheetAt(0);
+				Cell cell2Update = sheet.getRow(id).getCell(2);
+				cell2Update.setCellValue(nuevoValor);
+				
+				
+				inputStream.close();
+
+
+				FileOutputStream outputStream = new FileOutputStream(archivo);
+				workbook.write(outputStream);
+				workbook.close();
+				outputStream.close();
+				
+			} catch (IOException | EncryptedDocumentException
+					| InvalidFormatException ex) {
+				ex.printStackTrace();
+			}
+		}else if (atributo == "Precio" && id <= rowCount) {
+			try {
+				FileInputStream inputStream = new FileInputStream(new File(archivo));
+				Workbook workbook = WorkbookFactory.create(inputStream);
+				
+				while(ciclo) {
+					System.out.print("\n Ingrese el nuevo valor para el Precio: ");
+
+			        precio = entrada2.nextInt();
+			        
+			        if (precio == 0) {
+			        	System.out.print("\n Por favor ingrese un valor: ");
+			        }else {
+			        	ciclo = false;
+			        }
+				}
+				
+				Sheet sheet = workbook.getSheetAt(0);
+				Cell cell3Update = sheet.getRow(id).getCell(3);
+				cell3Update.setCellValue(precio);
+				
+				inputStream.close();
+				
+				FileOutputStream outputStream = new FileOutputStream(archivo);
+				workbook.write(outputStream);
+				workbook.close();
+				outputStream.close();
+				
+			} catch (IOException | EncryptedDocumentException
+					| InvalidFormatException ex) {
+				ex.printStackTrace();
+			}
+			
+		}else {
+			System.out.println("\nError: esa fila no existe, la ultima fila es:"+rowCount+" y usted ingreso:"+ id);
+		}
+	
+		return;
+	}
+	
 	public static void main(String[] args) {
 		String excelFilePath = "Inventario.xlsx";
-		
+		Scanner input = new Scanner(System.in);
+	    boolean mainLoop = true;
+	    
+	    int opcion = 0;
+	    while(mainLoop){
+	        System.out.println(" Grupo 2 \n");
+	        System.out.print("1. Alumno A \n");
+	        System.out.print("2. Alumno B \n");
+	        System.out.print("3. Alumno C.\n");
+	        System.out.print("4. Salir\n");
+	        System.out.print("\nSeleccione una opcion: ");
+
+	        opcion = input.nextInt();
+
+	    switch(opcion){
+
+	    case 1: //Alumno A
+	        
+	        
+	        break;
+
+	    case 2: //Alumno B 
+	        
+	        System.out.println("The Subtraction Leaves The Number: ");
+	        break;
+
+	    case 3: // Alumno C Jesus Cadiz
+	        int id=0, choice=0, p=0;
+	        Scanner registro = new Scanner(System.in);
+	        
+	        System.out.println(" Indique el numero del registro a actualizar \n");
+	        id = registro.nextInt();
+	        
+	        while(p == 0) {
+	        	System.out.println("Indique el atributo a actualizar: \n");
+		        System.out.println(" 1. Author \n");
+		        System.out.println(" 2. Price \n");
+		        
+		        choice = input.nextInt();
+		        
+		        if (choice == 1) {
+		        	ActualizarLibro(id,"Author", excelFilePath);
+		        	p = 1;
+		        }else if (choice == 2) {
+		        	ActualizarLibro(id,"Price" , excelFilePath);
+		        	p = 1;
+		        }else {
+		        	System.out.println("Seleccione una opcion valida \n");
+		        }
+	        }
+	    	break;
+	    case 4: // salir
+	    	mainLoop = false;
+	    	break;
+	    default :
+	             System.out.println("Opcion no valida!");
+	             break;
+	    }
+
+
+	    }
+		/* 
 		try {
 			FileInputStream inputStream = new FileInputStream(new File(excelFilePath));
 			Workbook workbook = WorkbookFactory.create(inputStream);
@@ -69,6 +214,10 @@ public class ExcelFileUpdateExample1 {
 				| InvalidFormatException ex) {
 			ex.printStackTrace();
 		}
+		
+	}
+	
+	*/
 	}
 
 }
