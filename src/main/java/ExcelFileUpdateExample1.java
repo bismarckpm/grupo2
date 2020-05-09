@@ -65,7 +65,7 @@ public class ExcelFileUpdateExample1 {
 					| InvalidFormatException ex) {
 				ex.printStackTrace();
 			}
-		}else if (atributo == "Precio" && id <= rowCount) {
+		}else if (atributo == "Price" && id <= rowCount) {
 			try {
 				FileInputStream inputStream = new FileInputStream(new File(archivo));
 				Workbook workbook = WorkbookFactory.create(inputStream);
