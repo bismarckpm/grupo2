@@ -1,7 +1,4 @@
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -10,7 +7,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import java.util.Iterator;
 import java.util.Scanner;
 
 public class ExcelFileUpdateExample1 {
@@ -208,18 +208,112 @@ public class ExcelFileUpdateExample1 {
 
 	}
 
-	
+	static void crearArchivo(String excelFilePath) throws FileNotFoundException {
+
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		XSSFSheet sheet = workbook.createSheet("Java Books");
+
+
+		Object[] cabecera =	{"No","Book","Title","Author","Price"};
+
+		Row myRow = sheet.createRow(0);
+		int columnCount = -1;
+		for (Object field : cabecera) {
+			Cell cell = myRow.createCell(++columnCount);
+			if (field instanceof String) {
+				cell.setCellValue((String) field);
+			} else if (field instanceof Integer) {
+				cell.setCellValue((Integer) field);
+			}
+		}
+
+
+
+		try (FileOutputStream outputStream = new FileOutputStream(excelFilePath)) {
+			workbook.write(outputStream);
+			System.out.println("Archivo Creado.");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void verificarArchivo(String excelFilePath) {
+		File tempFile = null;
+
+		try {
+			tempFile = new File(excelFilePath);
+			//Verifica si existe el archivo
+			if (!tempFile.exists()) {
+				System.out.println("No existe el archivo " + excelFilePath);
+				crearArchivo(excelFilePath);
+				imprimirArchivo(excelFilePath);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	static void imprimirArchivo(String excelFilePath){
+
+		File myFile = new File(excelFilePath);
+		try {
+			FileInputStream fis = new FileInputStream(myFile);
+			XSSFWorkbook myWorkBook = new XSSFWorkbook (fis);
+			//XSSFSheet mySheet = myWorkBook.getSheetAt(0);
+
+			Iterator<Sheet> sheetIterator = myWorkBook.iterator();
+			while (sheetIterator.hasNext()) {
+				Sheet mySheet= sheetIterator.next();
+				System.out.println("");
+				System.out.println( "Nombre del sheet: " + mySheet.getSheetName());
+				System.out.println("");
+				Iterator<Row> rowIterator = mySheet.iterator();
+
+				while (rowIterator.hasNext()) {
+					Row row = rowIterator.next();
+					Iterator<Cell> cellIterator = row.cellIterator();
+					while (cellIterator.hasNext()) {
+						Cell cell = cellIterator.next();
+						switch (cell.getCellType()) {
+							case Cell.CELL_TYPE_STRING:
+								System.out.print(cell.getStringCellValue() + "\t");
+								break;
+							case Cell.CELL_TYPE_NUMERIC:
+								System.out.print(cell.getNumericCellValue() + "\t");
+								break;
+							case Cell.CELL_TYPE_BOOLEAN:
+								System.out.print(cell.getBooleanCellValue() + "\t");
+								break;
+							default:
+						}
+					}
+					System.out.println("");
+				}
+
+
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+
+	}
 	public static void main(String[] args) {
 		String excelFilePath = "Inventario.xlsx";
+
+		//Alumno A: Ricardo Bastardo
+		verificarArchivo(excelFilePath);
+
 		Scanner input = new Scanner(System.in);
 	    boolean mainLoop = true;
 	    
 	    int opcion = 0;
 	    while(mainLoop){
 	        System.out.println(" Grupo 2 \n");
-	        System.out.print("1. Alumno A \n");
-	        System.out.print("2. Alumno B \n");
-	        System.out.print("3. Alumno C.\n");
+	        System.out.print("1. Ingresar Registro \n");
+	        System.out.print("2. Actualizar Registro \n");
 	        System.out.print("4. Salir\n");
 	        System.out.print("\nSeleccione una opcion: ");
 
@@ -227,12 +321,7 @@ public class ExcelFileUpdateExample1 {
 
 	    switch(opcion){
 
-	    case 1: //Alumno A
-	        
-	        
-	        break;
-
-	    case 2: //Alumno B 
+	    case 1: //Alumno B
 			String libro="";
 			String autor="";
 			int precio=0;
@@ -253,7 +342,7 @@ public class ExcelFileUpdateExample1 {
 		
 	        break;
 
-	    case 3: // Alumno C Jesus Cadiz
+	    case 2: // Alumno C Jesus Cadiz
 	        int id=0, choice=0, p=0;
 	        Scanner registro = new Scanner(System.in);
 	        
